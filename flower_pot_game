@@ -12,7 +12,7 @@ main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, "Assets")
 
 
-
+#Creating a function to set a standard for loading and scaling an image
 def load_image(name, colorkey=None, scale=1):
     fullname = os.path.join(data_dir, name)
     image = pg.image.load(fullname)
@@ -33,11 +33,19 @@ def load_image(name, colorkey=None, scale=1):
 
 
 
-# water_coords = ((200,200))
-
-
 # classes for our game objects
+# class Score(pg.sprite.Sprite):
+#     def __init__(self):
+#         number = 0
+#         pg.sprite.Sprite.__init__(self)
+#         self.number = number
+#         if pg.font:
+#             font = pg.font.Font(None, 64)
+#             text = font.render(int(number), True, (10, 10, 10))
+#             text.get_rect(x =50 , y=10)
+            
 
+#Setting up mouse sprite
 class Mouse(pg.sprite.Sprite):
     def __init__(self):
         pg.sprite.Sprite.__init__(self)
@@ -47,7 +55,7 @@ class Mouse(pg.sprite.Sprite):
         
 
 
-
+#Changing the mouse image based off of collison
     def water_pressed(self):
         self.image , self.rect = load_image("Water.png", -1)
         self.state = "Water"  
@@ -58,34 +66,31 @@ class Mouse(pg.sprite.Sprite):
         
     def fertalize_pressed(self):
         self.image , self.rect = load_image("Fertalize.png", -1)
-        self.state = "Fertalize"  
+        self.state = "Fertalizer"  
 
     def seeds_pressed(self):
         self.image, self.rect = load_image("Plant.png", -1)
         self.state = "Seeds"
 
+    def sell_pressed(self):
+        self.image, self.rect = load_image("Sell.png", -1)
+        self.state = "Sell"
+
 
 
       
-
     def update(self):
-        pos = pg.mouse.get_pos()
-            
-        
-        # else:
-        #     
-
+        pos = pg.mouse.get_pos()  
         self.rect.center = pos
-        
+
+
+ #Setting up classes that run as objects that players interact with       
 class Water(pg.sprite.Sprite):
     
     def __init__(self,image,position):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image, -1)
         self.rect.center = position
-
-    def button():
-        pass
          
 
 class Fertalize(pg.sprite.Sprite):
@@ -120,6 +125,7 @@ class Pots(pg.sprite.Sprite):
         screen = pg.display.get_surface()
         self.area = screen.get_rect()
         self.rect.center = position
+        #Dictonary to make the growth stages line up with an accesable index
         self.growth_dict = {
         0:"empty_pot.png",
         1:"1.png",
@@ -136,9 +142,6 @@ class Warning(pg.sprite.Sprite):
         
 
 def main():
-    """this function is called when the program starts.
-    it initializes everything it needs, then runs in
-    a loop until the function returns."""
     # Initialize Everything
     pg.init()
     screen = pg.display.set_mode((1000, 750), pg.SCALED)
@@ -157,6 +160,8 @@ def main():
         textpos = text.get_rect(centerx=background.get_width() / 2, y=10)
         background.blit(text, textpos)
 
+
+
     # Display The Background
     screen.blit(background, (0, 0))
     pg.display.flip()
@@ -170,6 +175,7 @@ def main():
     plant = Plant("Plant.png",(600,200))
     sell = Sell("Sell.png",(800,200))
     mouse = Mouse()
+    # scoreboard = Score()
  
     allsprites = pg.sprite.RenderPlain((pot_1 , pot_2 , pot_3 , water , fertalize , plant , sell , mouse))
     clock = pg.time.Clock()
@@ -188,6 +194,7 @@ def main():
 
         
             if event.type == pg.MOUSEBUTTONDOWN:
+                
                 pos = pg.mouse.get_pos()
                
                 if pos[0] > 150 and pos[0] < 250:
@@ -202,42 +209,91 @@ def main():
                     if pos[1] < 311 and pos[1] > 89:
                         mouse.seeds_pressed()
                 
+                elif pos[0] > 685 and pos[0] < 915:
+                    if pos[1] > 93 and pos[1] < 307:
+                        mouse.sell_pressed()
+                
                 else:
                     mouse.not_pressed()
                 #Water on water warning
 
-#kffuhsadogdfidfg              
-#gkashjgaljkfd
-                if pos[0] > 685 and pos[0] < 915:
-                     if pos[1] > 93 and pos[1] < 307:  
+
+
+
+                if pos[0] > 41 and pos[0] < 459:
+                     if pos[1] > 417 and pos[1] < 883:  
+                        
+                        if mouse.state == "Seeds" and pot_1.growth_stage == 0:
+                            pot_1.growth_stage += 1
+                            pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
+                            pot_1.image = pg.transform.scale(pot_1.image, (300,300))
+                        
+                        if mouse.state == "Fertalizer" and pot_1.growth_stage == 1:
+                            pot_1.growth_stage += 1
+                            pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
+                            pot_1.image = pg.transform.scale(pot_1.image, (300,300))
+
+                        if mouse.state == "Water" and pot_1.growth_stage == 2:
+                            pot_1.growth_stage += 1
+                            pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
+                            pot_1.image = pg.transform.scale(pot_1.image, (300,300))
 
                         if mouse.state == "Sell" and pot_1.growth_stage == 3:
                             pot_1.growth_stage = 0
-                            pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]         
-                #         if mouse.state == "Water" and pot_1.growth_stage == 0:
-                #             pot_1.growth_stage += 1
-                #             pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
+                            # Score.number +=1
+                            pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
+                            pot_1.image = pg.transform.scale(pot_1.image, (300,300))
+
+                elif pos[0] > 341 and pos[0] < 759:
+                    if pos[1] > 417 and pos[1] < 883:  
                         
-                #         if mouse.state == "Fertalizer" and pot_1.growth_stage == 1:
-                #             pot_1.growth_stage += 1
-                #             pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
+                        if mouse.state == "Seeds" and pot_2.growth_stage == 0:
+                                pot_2.growth_stage += 1
+                                pot_2.image = load_image((pot_2.growth_dict[pot_2.growth_stage]) , -1)[0]
+                                pot_2.image = pg.transform.scale(pot_2.image, (300,300))
+                            
+                        if mouse.state == "Fertalizer" and pot_2.growth_stage == 1:
+                                pot_2.growth_stage += 1
+                                pot_2.image = load_image((pot_2.growth_dict[pot_2.growth_stage]) , -1)[0]
+                                pot_2.image = pg.transform.scale(pot_2.image, (300,300))
 
-                #         if mouse.state == "Seed" and pot_1.growth_stage == 2:
-                #             pot_1.growth_stage += 1
-                #             pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
+                        if mouse.state == "Water" and pot_2.growth_stage == 2:
+                                pot_2.growth_stage += 1
+                                pot_2.image = load_image((pot_2.growth_dict[pot_2.growth_stage]) , -1)[0]
+                                pot_2.image = pg.transform.scale(pot_2.image, (300,300))
 
-                #         if mouse.state == "Sell" and pot_1.growth_stage == 3:
-                #             pot_1.growth_stage = 0
-                #             pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
+                        if mouse.state == "Sell" and pot_2.growth_stage == 3:
+                                pot_2.growth_stage = 0
+                                pot_2.image = load_image((pot_2.growth_dict[pot_2.growth_stage]) , -1)[0]
+                                pot_2.image = pg.transform.scale(pot_2.image, (300,300))
+
+                elif pos[0] > 641 and pos[0] < 1059:
+                     if pos[1] > 417 and pos[1] < 883:  
+                        
+                        if mouse.state == "Seeds" and pot_3.growth_stage == 0:
+                            pot_3.growth_stage += 1
+                            pot_3.image = load_image((pot_3.growth_dict[pot_3.growth_stage]) , -1)[0]
+                            pot_3.image = pg.transform.scale(pot_3.image, (300,300))
+                        
+                        if mouse.state == "Fertalizer" and pot_3.growth_stage == 1:
+                            pot_3.growth_stage += 1
+                            pot_3.image = load_image((pot_3.growth_dict[pot_3.growth_stage]) , -1)[0]
+                            pot_3.image = pg.transform.scale(pot_3.image, (300,300))
+
+                        if mouse.state == "Water" and pot_3.growth_stage == 2:
+                            pot_3.growth_stage += 1
+                            pot_3.image = load_image((pot_3.growth_dict[pot_3.growth_stage]) , -1)[0]
+                            pot_3.image = pg.transform.scale(pot_3.image, (300,300))
+
+                        if mouse.state == "Sell" and pot_3.growth_stage == 3:
+                            pot_3.growth_stage = 0
+                            pot_3.image = load_image((pot_3.growth_dict[pot_3.growth_stage]) , -1)[0]
+                            pot_3.image = pg.transform.scale(pot_3.image, (300,300))
 
                 
         
         mouse.update()
-# pots_coords = {
-#     (250,650):'pot_1',
-#     (550,650):'pot_2',
-#     (850,650):'pot_3'
-# }
+
         # Draw Everything
         screen.blit(background, (0, 0))
         allsprites.draw(screen)

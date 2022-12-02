@@ -178,9 +178,7 @@ def main():
         
             if event.type == pg.MOUSEBUTTONDOWN:
                 pos = pg.mouse.get_pos()
-                # print("fertalize " , fertalize.rect.bottomleft , fertalize.rect.topright)
-                # print("seeds " , plant.rect.bottomleft , plant.rect.topright)
-                # print("sell " , sell.rect.bottomleft , sell.rect.topright)
+                
                 if pos[0] > 150 and pos[0] < 250:
                     if pos[1] > 150 and pos[1] < 250:
                         mouse.water_pressed()
@@ -196,10 +194,13 @@ def main():
                 else:
                     mouse.water_not_pressed()
                 #Water on water warning
+
+
+                
                 if pos[0] > 41 and pos[0] < 459:
                     if pos[1] > 417 and pos[1] < 883:
 
-                        if mouse.state == "Water" and pot_1.growth_stage == 0:
+                        if mouse.state == "Seed" and pot_1.growth_stage == 0:
                             pot_1.growth_stage += 1
                             pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
                         
@@ -207,7 +208,7 @@ def main():
                             pot_1.growth_stage += 1
                             pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
 
-                        if mouse.state == "Seed" and pot_1.growth_stage == 2:
+                        if mouse.state == "Water" and pot_1.growth_stage == 2:
                             pot_1.growth_stage += 1
                             pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
 
