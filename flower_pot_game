@@ -1,6 +1,5 @@
 import os
 import pygame as pg
-import random
 
 # Setup for assests and directories
 if not pg.font:
@@ -8,10 +7,10 @@ if not pg.font:
 if not pg.mixer:
     print("Warning, sound disabled")
 
+
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, "Assets")
-
-
+    
 #Creating a function to set a standard for loading and scaling an image
 def load_image(name, colorkey=None, scale=1):
     fullname = os.path.join(data_dir, name)
@@ -29,21 +28,7 @@ def load_image(name, colorkey=None, scale=1):
     return image, image.get_rect()
 
 
-
-
-
-
 # classes for our game objects
-# class Score(pg.sprite.Sprite):
-#     def __init__(self):
-#         number = 0
-#         pg.sprite.Sprite.__init__(self)
-#         self.number = number
-#         if pg.font:
-#             font = pg.font.Font(None, 64)
-#             text = font.render(int(number), True, (10, 10, 10))
-#             text.get_rect(x =50 , y=10)
-            
 
 #Setting up mouse sprite
 class Mouse(pg.sprite.Sprite):
@@ -91,7 +76,6 @@ class Water(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image, -1)
         self.rect.center = position
-         
 
 class Fertalize(pg.sprite.Sprite):
     
@@ -122,6 +106,7 @@ class Pots(pg.sprite.Sprite):
         print(self.image)
         self.image = pg.transform.scale(self.image, (300,300))
         self.growth_stage = 0
+        self.score = 0
         screen = pg.display.get_surface()
         self.area = screen.get_rect()
         self.rect.center = position
@@ -132,6 +117,25 @@ class Pots(pg.sprite.Sprite):
         2:"2.png",
         3:"3.png"
         }
+
+# class Scoreboard(pg.sprite.Sprite):
+    
+#     def __init__(self,position):
+#         pg.sprite.Sprite.__init__(self)  # call Sprite initializer
+#         self.image , self.rect = load_image("number0.png" , -1)
+#         print(self.image)
+#         self.image = pg.transform.scale(self.image, (100,100))
+#         self.score = 0
+#         screen = pg.display.get_surface()
+#         self.area = screen.get_rect()
+#         self.rect.center = position
+#         #Dictonary to make the growth stages line up with an accesable index
+#         self.score_dict = {
+#         0:"number0.png",
+#         1:"number1.png",
+#         2:"number2.png",
+#         3:"number3.png"
+#         }
 
 class Warning(pg.sprite.Sprite):
     
@@ -159,8 +163,10 @@ def main():
         text = font.render("Gay Gardening Game", True, (10, 10, 10))
         textpos = text.get_rect(centerx=background.get_width() / 2, y=10)
         background.blit(text, textpos)
+    
+ 
 
-
+    
 
     # Display The Background
     screen.blit(background, (0, 0))
@@ -175,7 +181,9 @@ def main():
     plant = Plant("Plant.png",(600,200))
     sell = Sell("Sell.png",(800,200))
     mouse = Mouse()
-    # scoreboard = Score()
+    # scoreboard = Scoreboard((50,50))
+   
+
  
     allsprites = pg.sprite.RenderPlain((pot_1 , pot_2 , pot_3 , water , fertalize , plant , sell , mouse))
     clock = pg.time.Clock()
@@ -240,7 +248,7 @@ def main():
 
                         if mouse.state == "Sell" and pot_1.growth_stage == 3:
                             pot_1.growth_stage = 0
-                            # Score.number +=1
+                            pot_1.score +=1
                             pot_1.image = load_image((pot_1.growth_dict[pot_1.growth_stage]) , -1)[0]
                             pot_1.image = pg.transform.scale(pot_1.image, (300,300))
 
@@ -264,6 +272,7 @@ def main():
 
                         if mouse.state == "Sell" and pot_2.growth_stage == 3:
                                 pot_2.growth_stage = 0
+                                pot_2.score +=1
                                 pot_2.image = load_image((pot_2.growth_dict[pot_2.growth_stage]) , -1)[0]
                                 pot_2.image = pg.transform.scale(pot_2.image, (300,300))
 
@@ -287,10 +296,16 @@ def main():
 
                         if mouse.state == "Sell" and pot_3.growth_stage == 3:
                             pot_3.growth_stage = 0
+                            pot_3.score += 1
                             pot_3.image = load_image((pot_3.growth_dict[pot_3.growth_stage]) , -1)[0]
                             pot_3.image = pg.transform.scale(pot_3.image, (300,300))
 
-                
+            # Scoreboard.image = load_image((Scoreboard.score_dict([scoreboard.score])) , -1)[0]
+            # Scoreboard.image = pg.transform.scale(scoreboard.image, (100,100))
+
+
+                       
+        
         
         mouse.update()
 
@@ -298,6 +313,7 @@ def main():
         screen.blit(background, (0, 0))
         allsprites.draw(screen)
         pg.display.flip()
+        
 
     pg.quit()
 
