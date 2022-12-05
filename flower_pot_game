@@ -118,25 +118,6 @@ class Pots(pg.sprite.Sprite):
         3:"3.png"
         }
 
-# class Scoreboard(pg.sprite.Sprite):
-    
-#     def __init__(self,position):
-#         pg.sprite.Sprite.__init__(self)  # call Sprite initializer
-#         self.image , self.rect = load_image("number0.png" , -1)
-#         print(self.image)
-#         self.image = pg.transform.scale(self.image, (100,100))
-#         self.score = 0
-#         screen = pg.display.get_surface()
-#         self.area = screen.get_rect()
-#         self.rect.center = position
-#         #Dictonary to make the growth stages line up with an accesable index
-#         self.score_dict = {
-#         0:"number0.png",
-#         1:"number1.png",
-#         2:"number2.png",
-#         3:"number3.png"
-#         }
-
 class Warning(pg.sprite.Sprite):
     
     def __init__(self,image,position):
@@ -160,7 +141,7 @@ def main():
     # Put Text On The Background, Centered
     if pg.font:
         font = pg.font.Font(None, 64)
-        text = font.render("Gay Gardening Game", True, (10, 10, 10))
+        text = font.render("Gay Gardening Game", True, (255, 255, 255))
         textpos = text.get_rect(centerx=background.get_width() / 2, y=10)
         background.blit(text, textpos)
     
@@ -204,7 +185,6 @@ def main():
             if event.type == pg.MOUSEBUTTONDOWN:
                 
                 pos = pg.mouse.get_pos()
-               
                 if pos[0] > 150 and pos[0] < 250:
                     if pos[1] > 150 and pos[1] < 250:
                         mouse.water_pressed()
@@ -299,9 +279,26 @@ def main():
                             pot_3.score += 1
                             pot_3.image = load_image((pot_3.growth_dict[pot_3.growth_stage]) , -1)[0]
                             pot_3.image = pg.transform.scale(pot_3.image, (300,300))
+            score = pot_1.score + pot_2.score + pot_3.score
+        # if event.type == pg.MOUSEBUTTONDOWN:
+        #     pos = pg.mouse.get_pos()
+        #     if pos[0] > 20 and pos[0] < 40:
+        #         if pos[1] > 30 and pos[1] < 50:
+        #             score = 0
+                
 
-            # Scoreboard.image = load_image((Scoreboard.score_dict([scoreboard.score])) , -1)[0]
-            # Scoreboard.image = pg.transform.scale(scoreboard.image, (100,100))
+            font = pg.font.Font('freesansbold.ttf', 20)
+            def show_score(x, y):
+                score_value = font.render("Score : " + str(score), True, (255, 255, 255))
+                screen.blit(score_value, (x, y))
+
+            # def restart(x, y):
+            #     restart_score = font.render("Reset Score" , True , (255, 255, 255))
+            #     screen.blit(restart_score, (x, y))
+                
+                        
+              
+                
 
 
                        
@@ -311,6 +308,8 @@ def main():
 
         # Draw Everything
         screen.blit(background, (0, 0))
+        show_score(30, 10)
+        # restart(30 , 40)
         allsprites.draw(screen)
         pg.display.flip()
         
