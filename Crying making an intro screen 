@@ -98,12 +98,23 @@ class Plant(pg.sprite.Sprite):
         self.image, self.rect = load_image(image, -1)
         self.rect.center = position
 
+class Help(pg.sprite.Sprite):
+    def __init__(self):
+        pg.sprite.Sprite.__init__(self)
+        self.image, self.rect = load_image("help_icon.png", -1)
+        self.image = pg.transform.scale(self.image, (100,70))
+        self.rect.center = (970 , 100)
+        if 
+        self.image, self.rect = load_image("help_icon.png", -1)
+        self.image = pg.transform.scale(self.image, (100,70))
+        self.rect.center = (100 , 800)
+
+
 class Pots(pg.sprite.Sprite):
     
     def __init__(self,position):
         pg.sprite.Sprite.__init__(self)  # call Sprite initializer
         self.image , self.rect = load_image("empty_pot.png" , -1)
-        print(self.image)
         self.image = pg.transform.scale(self.image, (300,300))
         self.growth_stage = 0
         self.score = 0
@@ -118,6 +129,10 @@ class Pots(pg.sprite.Sprite):
         3:"3.png"
         }
 
+# class Help_window:
+#     def __init__(self):
+
+
 class Warning(pg.sprite.Sprite):
     
     def __init__(self,image,position):
@@ -125,7 +140,6 @@ class Warning(pg.sprite.Sprite):
         self.image, self.rect = load_image(image, -1)
         self.rect.center = position
         
-
 def main():
     # Initialize Everything
     pg.init()
@@ -162,11 +176,12 @@ def main():
     plant = Plant("Plant.png",(600,200))
     sell = Sell("Sell.png",(800,200))
     mouse = Mouse()
+    help = Help()
     # scoreboard = Scoreboard((50,50))
    
 
  
-    allsprites = pg.sprite.RenderPlain((pot_1 , pot_2 , pot_3 , water , fertalize , plant , sell , mouse))
+    allsprites = pg.sprite.RenderPlain((pot_1 , pot_2 , pot_3 , water , fertalize , plant , sell , mouse, help))
     clock = pg.time.Clock()
 
     # Main Loop
@@ -185,6 +200,12 @@ def main():
             if event.type == pg.MOUSEBUTTONDOWN:
                 
                 pos = pg.mouse.get_pos()
+
+                if pos[0] > 877 and pos[0] < 1063:
+                    if pos[1] > 4 and pos [1] < 196:
+                        Help.pressed()
+
+
                 if pos[0] > 150 and pos[0] < 250:
                     if pos[1] > 150 and pos[1] < 250:
                         mouse.water_pressed()
@@ -286,8 +307,8 @@ def main():
         #         if pos[1] > 30 and pos[1] < 50:
         #             score = 0
                 
-
-            font = pg.font.Font('freesansbold.ttf', 20)
+#score things
+            font = pg.font.Font('freesansbold.ttf', 30)
             def show_score(x, y):
                 score_value = font.render("Score : " + str(score), True, (255, 255, 255))
                 screen.blit(score_value, (x, y))
