@@ -7,10 +7,10 @@ if not pg.font:
 if not pg.mixer:
     print("Warning, sound disabled")
 
-
+intro = True
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, "Assets")
-    
+
 #Creating a function to set a standard for loading and scaling an image
 def load_image(name, colorkey=None, scale=1):
     fullname = os.path.join(data_dir, name)
@@ -98,16 +98,16 @@ class Plant(pg.sprite.Sprite):
         self.image, self.rect = load_image(image, -1)
         self.rect.center = position
 
-class Help(pg.sprite.Sprite):
-    def __init__(self):
-        pg.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image("help_icon.png", -1)
-        self.image = pg.transform.scale(self.image, (100,70))
-        self.rect.center = (970 , 100)
-        if 
-        self.image, self.rect = load_image("help_icon.png", -1)
-        self.image = pg.transform.scale(self.image, (100,70))
-        self.rect.center = (100 , 800)
+# class Help(pg.sprite.Sprite):
+#     def __init__(self):
+#         pg.sprite.Sprite.__init__(self)
+#         self.image, self.rect = load_image("help_icon.png", -1)
+#         self.image = pg.transform.scale(self.image, (100,70))
+#         self.rect.center = (970 , 100)
+#         if 
+#         self.image, self.rect = load_image("help_icon.png", -1)
+#         self.image = pg.transform.scale(self.image, (100,70))
+#         self.rect.center = (100 , 800)
 
 
 class Pots(pg.sprite.Sprite):
@@ -139,10 +139,14 @@ class Warning(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image, -1)
         self.rect.center = position
+
         
 def main():
     # Initialize Everything
+    
     pg.init()
+    
+
     screen = pg.display.set_mode((1000, 750), pg.SCALED)
     pg.display.set_caption("Gay Gardening")
     pg.mouse.set_visible(False)
@@ -152,13 +156,15 @@ def main():
     background = background.convert()
     background.fill((90,90,90))
 
+   
+
     # Put Text On The Background, Centered
     if pg.font:
-        font = pg.font.Font(None, 64)
+        font = pg.font.Font(None, 50)
         text = font.render("Gay Gardening Game", True, (255, 255, 255))
         textpos = text.get_rect(centerx=background.get_width() / 2, y=10)
         background.blit(text, textpos)
-    
+     
  
 
     
@@ -166,6 +172,7 @@ def main():
     # Display The Background
     screen.blit(background, (0, 0))
     pg.display.flip()
+
 
     # Prepare Game Objects
     pot_1 = Pots((250,650))
@@ -176,12 +183,12 @@ def main():
     plant = Plant("Plant.png",(600,200))
     sell = Sell("Sell.png",(800,200))
     mouse = Mouse()
-    help = Help()
+    # help = Help()
     # scoreboard = Scoreboard((50,50))
    
 
  
-    allsprites = pg.sprite.RenderPlain((pot_1 , pot_2 , pot_3 , water , fertalize , plant , sell , mouse, help))
+    allsprites = pg.sprite.RenderPlain((pot_1 , pot_2 , pot_3 , water , fertalize , plant , sell , mouse))
     clock = pg.time.Clock()
 
     # Main Loop
@@ -201,9 +208,9 @@ def main():
                 
                 pos = pg.mouse.get_pos()
 
-                if pos[0] > 877 and pos[0] < 1063:
-                    if pos[1] > 4 and pos [1] < 196:
-                        Help.pressed()
+                # if pos[0] > 877 and pos[0] < 1063:
+                #     if pos[1] > 4 and pos [1] < 196:
+                #         Help.pressed()
 
 
                 if pos[0] > 150 and pos[0] < 250:
@@ -300,16 +307,12 @@ def main():
                             pot_3.score += 1
                             pot_3.image = load_image((pot_3.growth_dict[pot_3.growth_stage]) , -1)[0]
                             pot_3.image = pg.transform.scale(pot_3.image, (300,300))
-            score = pot_1.score + pot_2.score + pot_3.score
-        # if event.type == pg.MOUSEBUTTONDOWN:
-        #     pos = pg.mouse.get_pos()
-        #     if pos[0] > 20 and pos[0] < 40:
-        #         if pos[1] > 30 and pos[1] < 50:
-        #             score = 0
-                
+
+                    
 #score things
             font = pg.font.Font('freesansbold.ttf', 30)
             def show_score(x, y):
+                score = pot_1.score + pot_2.score + pot_3.score
                 score_value = font.render("Score : " + str(score), True, (255, 255, 255))
                 screen.blit(score_value, (x, y))
 
@@ -323,7 +326,6 @@ def main():
         # Draw Everything
         screen.blit(background, (0, 0))
         show_score(30, 10)
-        # restart(30 , 40)
         allsprites.draw(screen)
         pg.display.flip()
         
@@ -334,4 +336,30 @@ def main():
 
 # this calls the 'main' function when this script is executed
 if __name__ == "__main__":
+    pg.init()
+    
+
+    screen = pg.display.set_mode((1000, 750), pg.SCALED)
+    pg.display.set_caption("Gay Gardening")
+    pg.mouse.set_visible(False)
+
+    # Create The Background
+    
+    intro = True
+    while intro == True:
+        if pg.font:
+            background = pg.Surface(screen.get_size())
+            background = background.convert()
+            background.fill((90,90,90))
+            font = pg.font.Font(None, 64)
+            text = font.render("Start", True, (255, 255, 255))
+            textpos = text.get_rect(centerx=background.get_width() / 2, y=100)
+            background.blit(text, textpos)
+            for event in pg.event.get():
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    pos = pg.mouse.get_pos()
+                    # if pos[0] > 400 and pos[0] < 600:
+                    #     if pos[1] > 50 and pos[1] < 150:
+                    #         intro = False
+                    intro = False
     main()
